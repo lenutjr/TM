@@ -1,0 +1,276 @@
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Jordan said PLS",
+    LoadingTitle = "Tapping Masters",
+    LoadingSubtitle = "by Jason AKA you Daddy",
+    ConfigurationSaving = {
+       Enabled = false,
+       FolderName = nil,
+       FileName = "Big Hub"
+    },
+    Discord = {
+       Enabled = false,
+       Invite = "noinvitelink",
+       RememberJoins = true
+    },
+    KeySystem = false,
+    KeySettings = {
+       Title = "Untitled",
+       Subtitle = "Key System",
+       Note = "No method of obtaining the key is provided",
+       FileName = "Key",
+       SaveKey = true,
+       GrabKeyFromSite = false,
+       Key = {"Hello"}
+    }
+ })
+
+ local Tab = Window:CreateTab("Main", 4483362458)
+
+ local Button = Tab:CreateButton({
+	Name = "AntiAFK",
+	Callback = function()
+		antiIdle()
+	end,
+})
+
+ local Toggle = Tab:CreateToggle({
+    Name = "Autoclick",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(bool)
+    getgenv().autoClick = bool
+        if bool then
+            ATClick()
+      end 
+end,
+ })
+
+ local Toggle = Tab:CreateToggle({
+    Name = "Autofarm Easter Egg",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(bool)
+    getgenv().autofarm = bool
+        if bool then
+            spawn(autoFarm)
+      end 
+end,
+ })
+
+ local Toggle = Tab:CreateToggle({
+    Name = "Autoclaim Houses",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(bool)
+    getgenv().autoClaim = bool
+        if bool then
+            ATClaim()
+      end 
+end,
+ })
+
+ local Button = Tab:CreateButton({
+	Name = "Get all Collectables",
+	Callback = function()
+		getAll()
+	end,
+})
+
+local Toggle = Tab:CreateToggle({
+    Name = "Auto Rebirth",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(bool)
+    getgenv().autoRebirth = bool
+        if bool then
+            ATRebirth()
+      end 
+end,
+ })
+
+ local reMountInt = {}
+ for _, rebirths in ipairs(game:GetService("Players").onlyweidosreport.PlayerGui.Rebirth.Holder.Holder.ScrollHolder.ScrollingFrame:GetChildren()) do
+     if rebirths.ClassName == "Frame" and tonumber(rebirths.Name) then
+         table.insert(reMountInt, tonumber(rebirths.Name))
+     end
+ end
+ table.insert(reMountInt, 1, 0)
+ 
+ local Dropdown = Tab:CreateDropdown({
+    Name = "Rebirth Amount",
+    Options = reMountInt,
+    CurrentOption = {0},
+    MultipleOptions = false,
+    Flag = "Dropdown1",
+    Callback = function(Option)
+        rebirthAmount = Option[1]
+    end,
+})
+
+ local Toggle = Tab:CreateToggle({
+    Name = "Auto Open Egg",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(bool)
+    getgenv().autoEgg = bool
+        if bool then
+            ATEgg()
+      end 
+end,
+ })
+
+local eggNames = {}
+
+for _, eggs in ipairs(game:GetService("Workspace").Scripted.EggHolders:GetChildren()) do
+    if eggs.ClassName == "Model" then
+        table.insert(eggNames, eggs.Name)
+    end
+end
+
+table.insert(eggNames, 1, "None")
+
+ local Dropdown = Tab:CreateDropdown({
+    Name = "Egg to Open",
+    Options = eggNames,
+    CurrentOption = {"None"},
+    MultipleOptions = false,
+    Flag = "Dropdown1",
+    Callback = function(Option)
+    eggName = Option[1]
+    end,
+ })
+
+ local Toggle = Tab:CreateToggle({
+    Name = "Hide/Show HatchDisplay",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(bool)
+        guiHideorShow(not bool)
+    end,
+})
+
+ function antiIdle()
+	local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:connect(function()
+    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+end
+
+function autoFarm()
+local function findNearestEgg()
+    local playerCharacter = game.Players.LocalPlayer.Character
+    local playerPosition = playerCharacter.HumanoidRootPart.Position
+    local nearestEgg
+    local minDistance = math.huge
+
+    for i, v in pairs(game:GetService("Workspace").Scripted.EasterCurrencyPickups:GetDescendants()) do
+        if v.Name == "Egg" and v.ClassName == "MeshPart" then
+            local eggPosition = v.Position
+            local distance = (playerPosition - eggPosition).Magnitude
+
+            if distance < minDistance then
+                minDistance = distance
+                nearestEgg = v
+            end
+        end
+    end
+
+    return nearestEgg
+end
+while task.wait() and getgenv().autofarm do
+    local nearestEgg = findNearestEgg()
+
+    while nearestEgg and getgenv().autofarm do
+        if nearestEgg:IsDescendantOf(game:GetService("Workspace")) then
+            local eggPosition = nearestEgg.CFrame
+
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = eggPosition + Vector3.new(-5, 0, 0)
+            task.wait(0.05)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = eggPosition
+            task.wait(0.05)
+        else
+            break
+        end
+    end
+
+    if not nearestEgg then
+        task.wait(1)
+        end
+    end
+end
+
+function getAll()
+    local playerHead = game.Players.LocalPlayer.Character.Head
+
+for i,v in pairs(game:GetService("Workspace").Scripted.CollectableEggs:GetChildren()) do
+    if v.ClassName == "MeshPart" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+        task.wait(0.3)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+        local ohString1 = v.Name
+
+        game:GetService("ReplicatedStorage").Events.CollectEggHunt:FireServer(ohString1)
+        end
+    end
+end
+
+function ATClaim()
+    spawn(function()
+        while task.wait() and autoClaim do
+        for i, v in pairs(game:GetService("Workspace").Scripted.Islands.Easter.Houses:GetDescendants()) do
+            if v.Name == "TextLabel" and v.Text == "Claim!" then
+                local touchPart = v.Parent.Parent.Parent:FindFirstChild("TouchPart")
+                if touchPart then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = touchPart.CFrame
+                    task.wait(1)
+                    end
+                end
+            end
+        end
+    end)
+end
+
+function ATClick()
+    spawn(function()
+    while task.wait() and autoClick do
+        game:GetService("ReplicatedStorage").Events.Click:FireServer()
+        end
+    end)
+end
+
+function ATRebirth()
+    spawn(function()
+        while task.wait() and autoRebirth do
+    local ohNumber1 = rebirthAmount
+
+game:GetService("ReplicatedStorage").Events.Rebirth:FireServer(ohNumber1)
+        end
+    end)
+end
+
+function ATEgg()
+    spawn(function()
+    while task.wait() and autoEgg do
+local ohString1 = eggName
+local ohString2 = "Triple"
+
+game:GetService("ReplicatedStorage").Functions.Hatch:InvokeServer(ohString1, ohString2)
+        end
+    end)
+end
+
+function guiHideorShow(enabled)
+    for _, gui in pairs(game:GetService("Players").LocalPlayer.PlayerGui:GetChildren()) do
+        if gui.Name == "HatchDisplay" and gui.ClassName == "ScreenGui" then
+            gui.Enabled = enabled
+        end
+    end
+end
+
+local function updateHatchDisplay(bool)
+    guiHideorShow(bool)
+end
